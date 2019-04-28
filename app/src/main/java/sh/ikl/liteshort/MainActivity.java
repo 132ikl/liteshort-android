@@ -50,15 +50,18 @@ public class MainActivity extends AppCompatActivity {
         // Create clipboard manager for later
         ClipboardManager clipboard = (ClipboardManager) v.getContext().getSystemService(Context.CLIPBOARD_SERVICE);
 
-        // Get the first item off of the primary clipboard
-        ClipData data = clipboard.getPrimaryClip();
-        String dataUri = data.getItemAt(0).getText().toString();
+        // Get the first item off of the primary clipboard if exists
+        String dataUri = "";
+        if (clipboard.getPrimaryClip() != null) {
+            ClipData data = clipboard.getPrimaryClip();
+            dataUri = data.getItemAt(0).getText().toString();
+        }
 
         // Check to see if something is inputted in the long URL box
         if (!String.valueOf(TextLongUrl.getText()).isEmpty()) {
             longUrl = TextLongUrl.getText().toString();
         }
-        else if (URLUtil.isNetworkUrl(dataUri)) {
+        else if (!dataUri.isEmpty() && URLUtil.isNetworkUrl(dataUri)) {
             // If no value in box, check to see if the clipboard has an URL
             longUrl = dataUri;
         } else {

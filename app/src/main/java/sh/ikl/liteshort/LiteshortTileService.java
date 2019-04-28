@@ -22,20 +22,29 @@ public class LiteshortTileService extends TileService {
     }
 
     public void onClick() {
-        // Get long URL from clipboard
+        // Get clipboard service
         ClipboardManager clipboard = (ClipboardManager) this.getSystemService(Context.CLIPBOARD_SERVICE);
-        ClipData data = clipboard.getPrimaryClip();
-        String longUrl = data.getItemAt(0).getText().toString();
+
+        // Check to make sure there actually is something in clipboard
+        String longUrl = "";
+        if (clipboard.getPrimaryClip() != null) {
+            ClipData data = clipboard.getPrimaryClip();
+            longUrl = data.getItemAt(0).getText().toString();
+        }
 
         // Get server URL from preferences
         SharedPreferences settings = getApplicationContext().getSharedPreferences("liteshort", 0);
         String serverUrl = settings.getString("Server", "https://ls.ikl.sh");
 
-        // Check to see if long URL is an actual URL
-        if (URLUtil.isNetworkUrl(longUrl)) {
-            new Shortener(this, clipboard).execute(serverUrl, longUrl);
+        // Check to see if long URL exists and is an actual URL
+        if (!longUrl.isEmpty()) {
+            if (URLUtil.isNetworkUrl(longUrl)) {
+                new Shortener(this, clipboard).execute(serverUrl, longUrl);
+            } else {
+                Toast.makeText(this, "Copied item is not a URL.", Toast.LENGTH_LONG).show();
+            }
         } else {
-            Toast.makeText(this, "Copied item is not a URL.", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "No clipboard data found.", Toast.LENGTH_LONG).show();
         }
 
     }
