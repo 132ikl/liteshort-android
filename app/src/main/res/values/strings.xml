@@ -2,5 +2,10 @@
     <string name="app_name">liteshort</string>
     <string name="shorten">Shorten</string>
     <string name="server_url">Server URL</string>
-    <string name="goodstring">YEET</string>
+    <string name="open_string">Open</string>
+    <string name="long_url">Long URL (optional)</string>
+    <string name="short_url">Custom text (optional)</string>
+    <string name="clipbox">Copy to clipboard</string>
+    <string name="explain">liteshort will automatically grab clipboard contents and replace it with a shortlink. If you specify a long URL, it will use that instead.</string>
+    <string name="tile_label">liteshort boy</string>
 </resources>

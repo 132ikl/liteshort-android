@@ -21,14 +21,14 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.382" />
+            app:layout_constraintVertical_bias="0.445" />
 
         <EditText
             android:id="@+id/serverUrl"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="24dp"
             android:ems="10"
             android:hint="@string/server_url"
             android:importantForAutofill="no"
@@ -39,6 +39,66 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/shorten"
             tools:targetApi="o" />
+
+        <EditText
+            android:id="@+id/longurl"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="100dp"
+            android:ems="10"
+            android:hint="@string/long_url"
+            android:importantForAutofill="no"
+            android:inputType="textUri"
+            app:layout_anchor="@+id/shorten"
+            app:layout_anchorGravity="bottom|center"
+            app:layout_constraintBottom_toTopOf="@+id/shorten"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:targetApi="o" />
+
+        <EditText
+            android:id="@+id/shorturl"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="32dp"
+            android:ems="10"
+            android:hint="@string/short_url"
+            android:importantForAutofill="no"
+            android:inputType="textUri"
+            app:layout_anchor="@+id/shorten"
+            app:layout_anchorGravity="bottom|center"
+            app:layout_constraintBottom_toTopOf="@+id/shorten"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:targetApi="o" />
+
+        <CheckBox
+            android:id="@+id/clipbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="@string/clipbox"
+            android:checked="true"
+            android:onClick="onCheckboxClicked"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/serverUrl" />
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="300dp"
+            android:layout_height="57dp"
+            android:layout_marginTop="64dp"
+            android:text="@string/explain"
+            android:textAlignment="center"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.495"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/serverUrl" />
+
     </android.support.constraint.ConstraintLayout>
 
 

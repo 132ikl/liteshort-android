@@ -1,128 +1,105 @@
 package sh.ikl.liteshort;
 
+import android.app.Activity;
 import android.content.ClipData;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.content.ClipboardManager;
+import android.view.inputmethod.InputMethodManager;
 import android.webkit.URLUtil;
+import android.widget.CheckBox;
 import android.widget.EditText;
-
-import com.android.volley.AuthFailureError;
-import com.android.volley.NetworkResponse;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.VolleyLog;
-import com.android.volley.toolbox.HttpHeaderParser;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
-import com.google.gson.Gson;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
-import java.util.StringJoiner;
-import java.util.logging.Logger;
 
 public class MainActivity extends AppCompatActivity {
 
+    boolean shouldCopy = true;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        SharedPreferences settings = getApplicationContext().getSharedPreferences("liteshort", 0);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // Load stored server from prefs and put it into the text box
         EditText serverUrl = findViewById(R.id.serverUrl);
+        SharedPreferences settings = getApplicationContext().getSharedPreferences("liteshort", 0);
         serverUrl.setText(settings.getString("Server", "https://ls.ikl.sh"));
     }
 
     public void onClick(View v) {
-        EditText serverUrl = findViewById(R.id.serverUrl);
-        ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
 
+        // Hide keyboard
+        hideKeyboard(this);
 
+        // Create preferences to store server URL
+        EditText TextServerUrl = findViewById(R.id.serverUrl);
         SharedPreferences settings = getApplicationContext().getSharedPreferences("liteshort", 0);
         SharedPreferences.Editor editor = settings.edit();
 
+        shortenLink(v, shouldCopy);
 
-        ClipData data = clipboard.getPrimaryClip();
-        String dataUri = String.valueOf(data.getItemAt(0).getText());
-
-        if (URLUtil.isNetworkUrl(dataUri)) {
-            new Shortener(v, clipboard).execute(serverUrl.getText().toString(), dataUri);
-        }
-
-        editor.putString("Server", String.valueOf(serverUrl.getText()));
+        // Put server into config
+        editor.putString("Server", TextServerUrl.getText().toString());
         editor.apply();
     }
 
-    static class Shortener extends AsyncTask<String, Void, JSONObject> {
+    public static void shortenLink(View v, boolean shouldCopy) {
+        // Put UI selections into variables
+        EditText TextServerUrl = v.findViewById(R.id.serverUrl);
+        EditText TextLongUrl = v.findViewById(R.id.longurl);
+        EditText TextShortUrl = v.findViewById(R.id.shorturl);
 
+        // Create storage for long url
+        String longUrl = "";
 
-        private View view;
-        private ClipboardManager clipman;
+        // Create clipboard manager for later
+        ClipboardManager clipboard = (ClipboardManager) v.getContext().getSystemService(Context.CLIPBOARD_SERVICE);
 
-        private Shortener(View v, ClipboardManager clipman) {
-            this.view = v;
-            this.clipman = clipman;
+        // Get the first item off of the primary clipboard
+        ClipData data = clipboard.getPrimaryClip();
+        String dataUri = data.getItemAt(0).getText().toString();
+
+        // Check to see if something is inputted in the long URL box
+        if (!TextLongUrl.getText().toString().isEmpty()) {
+            longUrl = TextLongUrl.getText().toString();
+        }
+        else if (URLUtil.isNetworkUrl(dataUri)) {
+            // If no value in box, check to see if the clipboard has an URL
+            longUrl = dataUri;
+        } else {
+            Snackbar.make(v, "Copied item is not a URL and no long URL supplied.", 3000).show();
         }
 
-        protected JSONObject doInBackground(String... strings) {
-
-            try {
-                String urlParameters = String.format("format=json&long=%s", strings[1]);
-
-                byte[] postData = urlParameters.getBytes(StandardCharsets.UTF_8);
-
-                URL url = new URL(strings[0]);
-                HttpURLConnection conn= (HttpURLConnection) url.openConnection();
-
-                conn.setDoOutput(true);
-                conn.setInstanceFollowRedirects(true);
-                conn.setRequestMethod("POST");
-
-                try( DataOutputStream wr = new DataOutputStream( conn.getOutputStream())) {
-                    wr.write(postData);
-                }
-
-                BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-                String inputLine;
-
-                JSONObject responseJSON = new JSONObject();
-                while ((inputLine = in.readLine()) != null) {
-                    responseJSON = new JSONObject(inputLine);
-                }
-                in.close();
-                return responseJSON;
-            } catch (Exception e) {
-                Snackbar.make(this.view, "Failed to generate URL. Error: " + e.toString(), 5000);
-                return null;
+        Shortener shortener = new Shortener(v, clipboard);
+        shortener.setShouldCopy(shouldCopy);
+        if (!longUrl.isEmpty()) {
+            if (!TextShortUrl.getText().toString().isEmpty()) {
+                shortener.execute(TextServerUrl.getText().toString(), longUrl, TextShortUrl.getText().toString());
+            } else {
+                shortener.execute(TextServerUrl.getText().toString(), longUrl);
             }
         }
+    }
 
-        protected void onPostExecute(JSONObject responseJSON) {
-            try {
-                Snackbar.make(this.view, "Successfully shortened link! Now available at: " + responseJSON.getString("result"), 3000).show();
-                ClipData replaceData = ClipData.newPlainText("liteshort shortened", responseJSON.getString("result"));
-                this.clipman.setPrimaryClip(replaceData);
-            } catch (JSONException e) {
-                Snackbar.make(this.view, "Failed to generate URL. Error: " + e.toString(), 5000);
-            }
+
+    public void onCheckboxClicked(View view) {
+        // Set value to whether box is checked or not
+        shouldCopy = ((CheckBox) view).isChecked();
+    }
+
+
+    public static void hideKeyboard(Activity activity) { // https://stackoverflow.com/a/17789187
+        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        //Find the currently focused view, so we can grab the correct window token from it.
+        View view = activity.getCurrentFocus();
+        //If no view currently has focus, create a new one, just so we can grab a window token from it
+        if (view == null) {
+            view = new View(activity);
         }
-
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 }
 

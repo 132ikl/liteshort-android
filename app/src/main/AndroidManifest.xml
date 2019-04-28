@@ -16,7 +16,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <service
+            android:name=".LiteshortTileService"
+            android:label="@string/tile_label"
+            android:icon="@drawable/ic_launcher_background"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+        </service>
+
     </application>
     <uses-permission android:name="android.permission.INTERNET" />
+
 
 </manifest>
