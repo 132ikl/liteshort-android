@@ -7,5 +7,5 @@
     <string name="short_url">Custom text (optional)</string>
     <string name="clipbox">Copy to clipboard</string>
     <string name="explain">liteshort will automatically grab clipboard contents and replace it with a shortlink. If you specify a long URL, it will use that instead.</string>
-    <string name="tile_label">liteshort boy</string>
+    <string name="tile_label">Shorten clipboard link</string>
 </resources>

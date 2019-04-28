@@ -42,7 +42,8 @@ public class Shortener extends AsyncTask<String, Void, JSONObject> {
     protected JSONObject doInBackground(String... strings) {
         try {
 
-            String options = String.format("long=%s", strings[1]);
+            // Use options string so can easily add short if exists
+            String options = "&long=" + strings[1];
 
             // Check if short URL provided and add to options
             if (strings.length >= 3) {
@@ -50,7 +51,7 @@ public class Shortener extends AsyncTask<String, Void, JSONObject> {
             }
 
             // Grab long url from parameters, and put it in POST string
-            String urlParameters = "format=json&" + options;
+            String urlParameters = "format=json" + options;
 
             // HttpURLConnection handles POSTs really weird, so encode it into byte array
             byte[] postData = urlParameters.getBytes(StandardCharsets.UTF_8);
@@ -138,6 +139,7 @@ public class Shortener extends AsyncTask<String, Void, JSONObject> {
         }
     }
 
+    // shouldCopy setter
     void setShouldCopy(boolean shouldCopy) {
         this.shouldCopy = shouldCopy;
     }

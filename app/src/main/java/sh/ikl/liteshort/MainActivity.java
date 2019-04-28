@@ -20,6 +20,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // Load main activity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -34,23 +35,14 @@ public class MainActivity extends AppCompatActivity {
         // Hide keyboard
         hideKeyboard(this);
 
-        // Create preferences to store server URL
+        // Put UI selections into variables
         EditText TextServerUrl = findViewById(R.id.serverUrl);
+        EditText TextLongUrl = findViewById(R.id.longurl);
+        EditText TextShortUrl = findViewById(R.id.shorturl);
+
+        // Create preferences to store server URL
         SharedPreferences settings = getApplicationContext().getSharedPreferences("liteshort", 0);
         SharedPreferences.Editor editor = settings.edit();
-
-        shortenLink(v, shouldCopy);
-
-        // Put server into config
-        editor.putString("Server", TextServerUrl.getText().toString());
-        editor.apply();
-    }
-
-    public static void shortenLink(View v, boolean shouldCopy) {
-        // Put UI selections into variables
-        EditText TextServerUrl = v.findViewById(R.id.serverUrl);
-        EditText TextLongUrl = v.findViewById(R.id.longurl);
-        EditText TextShortUrl = v.findViewById(R.id.shorturl);
 
         // Create storage for long url
         String longUrl = "";
@@ -63,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
         String dataUri = data.getItemAt(0).getText().toString();
 
         // Check to see if something is inputted in the long URL box
-        if (!TextLongUrl.getText().toString().isEmpty()) {
+        if (!String.valueOf(TextLongUrl.getText()).isEmpty()) {
             longUrl = TextLongUrl.getText().toString();
         }
         else if (URLUtil.isNetworkUrl(dataUri)) {
@@ -73,8 +65,11 @@ public class MainActivity extends AppCompatActivity {
             Snackbar.make(v, "Copied item is not a URL and no long URL supplied.", 3000).show();
         }
 
+        // Create instance of shortened and set it to copy or not based on checkbox
         Shortener shortener = new Shortener(v, clipboard);
         shortener.setShouldCopy(shouldCopy);
+
+        // If there is a Long URL, then shorten link based upon if there is a short URL
         if (!longUrl.isEmpty()) {
             if (!TextShortUrl.getText().toString().isEmpty()) {
                 shortener.execute(TextServerUrl.getText().toString(), longUrl, TextShortUrl.getText().toString());
@@ -82,8 +77,11 @@ public class MainActivity extends AppCompatActivity {
                 shortener.execute(TextServerUrl.getText().toString(), longUrl);
             }
         }
-    }
 
+        // Put server into config
+        editor.putString("Server", TextServerUrl.getText().toString());
+        editor.apply();
+    }
 
     public void onCheckboxClicked(View view) {
         // Set value to whether box is checked or not

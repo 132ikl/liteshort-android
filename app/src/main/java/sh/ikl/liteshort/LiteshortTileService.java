@@ -14,6 +14,7 @@ import android.widget.Toast;
 @RequiresApi(api = Build.VERSION_CODES.N)
 public class LiteshortTileService extends TileService {
 
+    // Set the tile to be have inactive background (just aesthetics)
     public void onStartListening() {
         Tile t = getQsTile();
         t.setState(Tile.STATE_INACTIVE);
