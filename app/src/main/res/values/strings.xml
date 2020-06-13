@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">liteshort</string>
+    <string name="app_name" translatable="false">liteshort</string>
     <string name="shorten">Shorten</string>
     <string name="server_url">Server URL</string>
     <string name="open_string">Open</string>

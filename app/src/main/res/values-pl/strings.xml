@@ -1,0 +1,10 @@
+<resources>
+    <string name="shorten">Skróć</string>
+    <string name="server_url">URL Serwera</string>
+    <string name="open_string">Otwórz</string>
+    <string name="long_url">Długi URL (opcjonalne)</string>
+    <string name="short_url">Niestandardowy teskt (opcjonalne)</string>
+    <string name="clipbox">Skopiuj do schowka</string>
+    <string name="explain">liteshort automatycznie pobierze zawartość schowka i zastąpi ją skróconym linkiem. Jeśli podasz długi adres URL, użyje go zamiast schowka.</string>
+    <string name="tile_label">Skróć link ze schowka</string>
+</resources>
