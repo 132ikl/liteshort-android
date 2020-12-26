@@ -2,13 +2,13 @@ package sh.ikl.liteshort;
 
 import android.app.Activity;
 import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
-import android.content.ClipboardManager;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.URLUtil;
 import android.widget.CheckBox;
@@ -31,7 +31,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onClick(View v) {
-
         // Hide keyboard
         hideKeyboard(this);
 
@@ -60,8 +59,7 @@ public class MainActivity extends AppCompatActivity {
         // Check to see if something is inputted in the long URL box
         if (!String.valueOf(TextLongUrl.getText()).isEmpty()) {
             longUrl = TextLongUrl.getText().toString();
-        }
-        else if (!dataUri.isEmpty() && URLUtil.isNetworkUrl(dataUri)) {
+        } else if (!dataUri.isEmpty() && URLUtil.isNetworkUrl(dataUri)) {
             // If no value in box, check to see if the clipboard has an URL
             longUrl = dataUri;
         } else {
