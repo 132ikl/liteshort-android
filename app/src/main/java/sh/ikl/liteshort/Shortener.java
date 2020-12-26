@@ -50,22 +50,20 @@ public class Shortener extends AsyncTask<String, Void, JSONObject> {
                 options = options + "&short=" + strings[2];
             }
 
-            // Grab long url from parameters, and put it in POST string
-            String urlParameters = "format=json" + options;
-
             // HttpURLConnection handles POSTs really weird, so encode it into byte array
-            byte[] postData = urlParameters.getBytes(StandardCharsets.UTF_8);
+            byte[] postData = options.getBytes(StandardCharsets.UTF_8);
 
             // Create new connection from the first string passed (liteshort server)
             URL url = new URL(strings[0]);
-            HttpURLConnection conn= (HttpURLConnection) url.openConnection();
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
             conn.setDoOutput(true);
             conn.setInstanceFollowRedirects(true);
             conn.setRequestMethod("POST");
+            conn.setRequestProperty("Accept", "application/json");
 
             // Write post data
-            try( DataOutputStream wr = new DataOutputStream(conn.getOutputStream())) {
+            try (DataOutputStream wr = new DataOutputStream(conn.getOutputStream())) {
                 wr.write(postData);
             }
 
@@ -80,7 +78,7 @@ public class Shortener extends AsyncTask<String, Void, JSONObject> {
 
             in.close();
             return resultJSON;
-            
+
         } catch (IOException e) {
             // Usually only happens when can't connect to server
             handleReturn(false, "Invalid server?");
@@ -126,7 +124,7 @@ public class Shortener extends AsyncTask<String, Void, JSONObject> {
             } else {
                 Snackbar.make(this.view, "Failed to generate short URL. Error: " + result, 5000).show();
             }
-        // If QS Tile
+            // If QS Tile
         } else if (this.context != null) {
             if (success) {
                 // Put new url on clipboard and send toast
