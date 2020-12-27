@@ -6,7 +6,7 @@ android {
         applicationId "sh.ikl.liteshort"
         minSdkVersion 19
         targetSdkVersion 28
-        versionCode 1
+        versionCode 4
         versionName "v1.1.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
