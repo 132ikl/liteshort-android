@@ -1,0 +1,5 @@
+liteshort is a link shortener designed with lightweightness, user and sysadmin-friendliness, privacy, and configurability in mind. liteshort-android (this app) is a client for liteshort, which allows you to easily shorten URLs using any liteshort server.
+
+You can shorten a URL through the main interface. By default, pressing the shorten button takes a URL from the clipboard and shortens it. You can also provide a long url and a short url, similar to the functionality of liteshort's web interface. 
+
+You can also shorten a URL by using the Quick Settings tile. Simply click the button in your settings tray and the URL on the clipboard will be shortened and replaced.
